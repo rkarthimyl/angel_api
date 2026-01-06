@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
-import mplfinance as mpf
-import matplotlib.pyplot as plt
+# import mplfinance as mpf
+# import matplotlib.pyplot as plt
 
 # Generate Example OHLC Data
 data = {
@@ -75,23 +75,23 @@ def on_hover(event):
     annot.set_visible(False)
     fig.canvas.draw_idle()
 
-def show_Chart(df):
-    # df = pd.DataFrame(data)
-    # df.set_index('Date', inplace=True)
+# def show_Chart(df):
+#     # df = pd.DataFrame(data)
+#     # df.set_index('Date', inplace=True)
     
-    # Apply classification
-    df['Candle_Type'] = df.apply(identify_candlestick, axis=1)
+#     # Apply classification
+#     df['Candle_Type'] = df.apply(identify_candlestick, axis=1)
 
-    # Plot with mplfinance
-    fig, ax = plt.subplots(figsize=(10, 6))
-    mpf.plot(df, type='candle', ax=ax, style='charles', volume=False)
+#     # Plot with mplfinance
+#     fig, ax = plt.subplots(figsize=(10, 6))
+#     mpf.plot(df, type='candle', ax=ax, style='charles', volume=False)
 
-    # Create Annotation for Hover
-    annot = ax.annotate("", xy=(0,0), xytext=(20,20), textcoords="offset points",
-                        bbox=dict(boxstyle="round", fc="w"),
-                        arrowprops=dict(arrowstyle="->"))
-    annot.set_visible(False)
+#     # Create Annotation for Hover
+#     annot = ax.annotate("", xy=(0,0), xytext=(20,20), textcoords="offset points",
+#                         bbox=dict(boxstyle="round", fc="w"),
+#                         arrowprops=dict(arrowstyle="->"))
+#     annot.set_visible(False)
 
 
-    fig.canvas.mpl_connect("motion_notify_event", on_hover)
-    plt.show()
+#     fig.canvas.mpl_connect("motion_notify_event", on_hover)
+#     plt.show()
