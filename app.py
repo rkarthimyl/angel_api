@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, json, request, jsonify
 import pyotp
 from SmartApi import SmartConnect
 import angelOne
@@ -121,6 +121,40 @@ def place_order():
     return jsonify({
         "Status": orderid
     })
+    
+@app.route("/cancel-order", methods=["POST"])
+def cancel_order():
+    body = request.json
+    variety = body.get("variety")
+    orderid = body.get("orderid")
+
+    orderid = angelOne.cancel_order(smartApi, variety, orderid);
+    
+    return jsonify({
+        "Status": orderid
+    })
+ 
+    
+@app.route("/stoploss-order", methods=["POST"])
+def place_stoploss_order():
+    body = request.json
+    tradingsymbol = body.get("tradingsymbol")
+    symboltoken = body.get("symboltoken")
+    transactiontype = body.get("transactiontype")
+    exchange = body.get("exchange")
+    ordertype = body.get("ordertype")
+    producttype = body.get("producttype")
+    duration = body.get("duration")
+    price = body.get("price")
+    triggerprice = body.get("triggerprice")
+    quantity = body.get("quantity")
+
+
+    orderid = angelOne.stoploss_Order(smartApi, triggerprice, quantity, symboltoken, tradingsymbol, exchange, transactiontype, producttype, ordertype, duration, price, triggerprice);
+    
+    return jsonify({
+        "Status": orderid
+    })
 
 @app.route("/orders", methods=["POST"])
 def orders():
@@ -145,6 +179,70 @@ def open_position():
         
     })
 
+
+@app.route("/pending-position", methods=["POST"])
+def pending_position():
+    try:
+    # Assuming 'obj' is your initialized SmartConnect instance
+        body = request.json
+        symboltoken = body.get("symboltoken")
+        order_book_response = smartApi.orderBook()
+
+        if order_book_response['status'] == False:
+            pending_orders = ("Error fetching order book:", order_book_response['message'])
+        else:
+            all_orders = order_book_response.get('data', [])
+            
+            print(f"Total orders today: {len(all_orders)}\n")
+            
+            pending_orders = [
+                order for order in all_orders
+                if order['status'].lower() in ['open', 'trigger pending', 'open pending', 'pending']
+                and (symboltoken == "" or order['symboltoken'] == symboltoken)
+            ]
+            return jsonify({
+                "orders": pending_orders
+                
+            })        
+    except Exception as e:
+        return jsonify({
+            "orders": data
+        })
+
+
+@app.route("/cancel-pending-position", methods=["POST"])
+def cancel_pending_position():
+    try:
+    # Assuming 'obj' is your initialized SmartConnect instance
+        body = request.json
+        symboltoken = body.get("symboltoken")
+        order_book_response = smartApi.orderBook()
+
+        if order_book_response['status'] == False:
+            pending_orders = ("Error fetching order book:", order_book_response['message'])
+        else:
+            all_orders = order_book_response.get('data', [])
+            
+            print(f"Total orders today: {len(all_orders)}\n")
+            
+            pending_orders = [
+                order for order in all_orders
+                if order['status'].lower() in ['open', 'trigger pending', 'open pending', 'pending']
+                and (symboltoken == "" or order['symboltoken'] == symboltoken)
+            ]
+            for order in pending_orders:
+                order_id = order.get('orderid', 'N/A')
+                variety = order.get('variety', 'N/A')
+                cancel_response = smartApi.cancelOrder(order_id, variety)
+                print(f"Cancel response for Order ID {order_id}: {cancel_response}")
+            return jsonify({
+                "orders": pending_orders
+                
+            })        
+    except Exception as e:
+        return jsonify({
+            "orders": data
+        })
 
 # ================= START =================
 if __name__ == "__main__":

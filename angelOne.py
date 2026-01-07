@@ -24,6 +24,7 @@ def place_Order(smartApi):
             "stoploss": "0",
             "quantity": "1"
             }
+        
         # Method 1: Place an order and return the order ID
         orderid = smartApi.placeOrder(orderparams)
         return (f"PlaceOrder : {orderid}")
@@ -33,7 +34,57 @@ def place_Order(smartApi):
     except Exception as e:
         return f"Order placement failed: {e}"
 
+def cancel_order(smartApi, variety, orderid):
+    try:
 
+        # Method 1: Place an order and return the order ID
+        response = smartApi.cancelOrder(orderid, variety)
+        return (f"CancelOrder : {response}")
+        # Method 2: Place an order and return the full response
+        #response = smartApi.placeOrderFullResponse(orderparams)
+        #print(f"PlaceOrder : {response}")
+    except Exception as e:
+        return f"Order placement failed: {e}"
+
+def stoploss_Order(smartApi,stoploss_price,quantity,symboltoken,tradingsymbol,exchange,transactiontype,producttype,ordertype,duration,price,triggerprice):
+    try:
+        orderparams =  {
+            "variety": "STOPLOSS",
+            "tradingsymbol": tradingsymbol,
+            "symboltoken": symboltoken,
+            "transactiontype": transactiontype,
+            "exchange": exchange,
+            "ordertype": ordertype,
+            "producttype": producttype,
+            "duration": duration,
+            "price": price,               # Limit price (e.g., sell at ₹11.50 or better)
+            "triggerprice": triggerprice,        # Trigger when price <= ₹12.00
+            "quantity": quantity
+        }
+
+        # orderparams =  {
+        #     "variety": "STOPLOSS",
+        #     "tradingsymbol": tradingsymbol,
+        #     "symboltoken": symboltoken,
+        #     "transactiontype": "SELL",
+        #     "exchange": "BFO",
+        #     "ordertype": "STOPLOSS_LIMIT",
+        #     "producttype": "CARRYFORWARD",
+        #     "duration": "DAY",
+        #     "price": "10.50",               # Limit price (e.g., sell at ₹11.50 or better)
+        #     "triggerprice": "11.00",        # Trigger when price <= ₹12.00
+        #     "quantity": "20"
+        # }
+
+
+        # Method 1: Place an order and return the order ID
+        orderid = smartApi.placeOrder(orderparams)
+        return (f"PlaceOrder : {orderid}")
+        # Method 2: Place an order and return the full response
+        #response = smartApi.placeOrderFullResponse(orderparams)
+        #print(f"PlaceOrder : {response}")
+    except Exception as e:
+        return f"Order placement failed: {e}"
 
 
 def get_CandleStick(smartApi):

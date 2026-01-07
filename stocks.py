@@ -3,6 +3,7 @@ from datetime import datetime
 import myChart as mc
 import mplfinance as mpf
 import matplotlib.dates as mdates
+
 def get_CandleStick(smartApi,exchange,symboltoken,interval):
     start_time = datetime.now().strftime("%Y-%m-%d 09:00")
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M")
