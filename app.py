@@ -42,6 +42,12 @@ def login_once():
     print("✅ Angel One logged in (in-memory token)")
 
 # ================= API ENDPOINT =================
+@app.route("/test", methods=["GET"])
+def test():
+    return jsonify({
+        "status": "API is working"
+    })
+
 @app.route("/get-nifty-token", methods=["POST"])
 def get_nifty_token():
     body = request.json
